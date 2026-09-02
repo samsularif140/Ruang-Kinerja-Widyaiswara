@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Kinerja Widyaiswara</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-white text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('beranda')">
+                    <div class="w-10 h-10 rounded-xl bg-teal-900 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg text-slate-900 block leading-tight">Ruang Kinerja</span>
+                        <span class="text-[11px] text-teal-700 font-extrabold tracking-wider uppercase">Widyaiswara</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <button onclick="switchTab('beranda')" id="nav-beranda" class="px-4 py-2 rounded-xl text-sm font-semibold text-teal-900 bg-teal-50 transition-all">Beranda</button>
+                    <button onclick="switchTab('kegiatan')" id="nav-kegiatan" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-teal-900 hover:bg-slate-50 transition-all">Kegiatan</button>
+                    <button onclick="switchTab('galeri')" id="nav-galeri" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-teal-900 hover:bg-slate-50 transition-all">Galeri Foto</button>
+                    <button onclick="switchTab('materi')" id="nav-materi" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-teal-900 hover:bg-slate-50 transition-all">Materi</button>
+                    <button onclick="switchTab('profil')" id="nav-profil" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-teal-900 hover:bg-slate-50 transition-all">Profil</button>
+                    <div class="h-5 w-px bg-slate-200 mx-2"></div>
+                    <button onclick="openAdminLogin()" class="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-slate-900 hover:bg-teal-900 transition-all shadow-xs">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                        <span>Admin</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('beranda'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-teal-900 bg-teal-50">Beranda</button>
+            <button onclick="switchTab('kegiatan'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50">Kegiatan</button>
+            <button onclick="switchTab('galeri'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50">Galeri Foto</button>
+            <button onclick="switchTab('materi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50">Materi</button>
+            <button onclick="switchTab('profil'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50">Profil</button>
+            <button onclick="openAdminLogin(); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-base font-medium text-white bg-slate-900">Admin Dashboard</button>
+        </div>
+    </nav>
+
+    <!-- Notifikasi Toast Sukses -->
+    <div id="toast-notification" class="fixed top-20 right-6 z-50 transform translate-x-96 opacity-0 transition-all duration-300 ease-in-out">
+        <div class="bg-emerald-900 text-white px-6 py-3.5 rounded-2xl shadow-xl flex items-center space-x-3 border border-emerald-700">
+            <div class="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-check text-sm"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-xs uppercase tracking-wider text-emerald-300">Berhasil!</h4>
+                <p id="toast-message" class="text-xs text-slate-100">Perubahan berhasil disimpan ke database.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="flex-grow">
+
+        <!-- TAB BERANDA -->
+        <section id="tab-beranda" class="tab-content">
+            <!-- Hero Section Clean & Minimalist -->
+            <div class="relative bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <span class="text-xs font-bold tracking-widest uppercase text-teal-800 block">PEMATERI SEMINAR & WORKSHOP</span>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
+                            Menginspirasi Perubahan, Membangun Insan Unggul
+                        </h1>
+                        <p class="text-base sm:text-lg text-slate-600 max-w-xl font-normal leading-relaxed" id="hero-subtitle">
+                            Widyaiswara membantu organisasi, kampus, dan komunitas bertumbuh melalui seminar dan workshop yang aplikatif — dari kepemimpinan hingga komunikasi.
+                        </p>
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button onclick="switchTab('kegiatan')" class="px-7 py-3.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white font-bold transition-all shadow-md flex items-center space-x-2 text-sm">
+                                <span>Undang Pemateri</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                            <button onclick="switchTab('galeri')" class="px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold transition-all border border-slate-300 text-sm shadow-xs">
+                                Lihat Galeri Foto
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Foto Profil -->
+                    <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                        <div class="w-full max-w-md h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-slate-100 border border-slate-200 relative">
+                            <img id="hero-profile-img" src="" alt="Foto Profil Widyaiswara" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistik Cards -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-chalkboard"></i>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black text-slate-900 block" id="count-workshop">18</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Workshop</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-users-rectangle"></i>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black text-slate-900 block" id="count-seminar">24</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Seminar</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black text-slate-900 block" id="count-pelatihan">35</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pelatihan</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-images"></i>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black text-slate-900 block" id="count-galeri">12</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Foto Galeri</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kegiatan Terbaru -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-100">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                    <div>
+                        <span class="text-teal-800 font-bold text-xs tracking-wider uppercase bg-teal-50 px-3.5 py-1.5 rounded-full">Dokumentasi Terbaru</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Kegiatan Widyaiswara</h2>
+                    </div>
+                    <button onclick="switchTab('kegiatan')" class="mt-4 md:mt-0 text-teal-800 font-bold hover:text-teal-950 flex items-center space-x-2 text-sm group">
+                        <span>Lihat Semua Kegiatan</span>
+                        <i class="fa-solid fa-chevron-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+                <div id="latest-activities-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB KEGIATAN -->
+        <section id="tab-kegiatan" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-extrabold text-slate-900">Daftar Seluruh Kegiatan</h1>
+                    <p class="text-slate-500 mt-1">Cari dan filter kegiatan workshop, seminar, pelatihan, maupun webinar.</p>
+                </div>
+
+                <!-- Filter & Search Bar -->
+                <div class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="relative w-full md:w-96">
+                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
+                        <input type="text" id="search-kegiatan" oninput="filterKegiatan()" placeholder="Cari judul kegiatan atau deskripsi..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50">
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <button onclick="setCategoryFilter('Semua')" id="filter-btn-Semua" class="px-4 py-2 rounded-xl text-xs font-semibold bg-teal-900 text-white transition-all shadow-sm">Semua</button>
+                        <button onclick="setCategoryFilter('Workshop')" id="filter-btn-Workshop" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Workshop</button>
+                        <button onclick="setCategoryFilter('Seminar')" id="filter-btn-Seminar" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Seminar</button>
+                        <button onclick="setCategoryFilter('Pelatihan')" id="filter-btn-Pelatihan" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Pelatihan</button>
+                        <button onclick="setCategoryFilter('Webinar')" id="filter-btn-Webinar" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Webinar</button>
+                    </div>
+                </div>
+
+                <!-- Kegiatan Grid -->
+                <div id="kegiatan-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB GALERI FOTO -->
+        <section id="tab-galeri" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-extrabold text-slate-900">Galeri Foto Kegiatan & Dokumentasi</h1>
+                    <p class="text-slate-500 mt-1">Koleksi foto kegiatan fasilitasi pelatihan, seminar, dan workshop widyaiswara.</p>
+                </div>
+
+                <!-- Galeri Filter Buttons -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button onclick="setGaleriFilter('Semua')" id="galeri-btn-Semua" class="px-4 py-2 rounded-xl text-xs font-semibold bg-teal-900 text-white transition-all shadow-sm">Semua Foto</button>
+                    <button onclick="setGaleriFilter('Fasilitasi')" id="galeri-btn-Fasilitasi" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Fasilitasi Kelas</button>
+                    <button onclick="setGaleriFilter('Narasumber')" id="galeri-btn-Narasumber" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Narasumber</button>
+                    <button onclick="setGaleriFilter('Pelatihan')" id="galeri-btn-Pelatihan" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Pelatihan</button>
+                </div>
+
+                <!-- Galeri Grid -->
+                <div id="galeri-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB MATERI -->
+        <section id="tab-materi" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-extrabold text-slate-900">Pusat Unduhan Materi</h1>
+                    <p class="text-slate-500 mt-1">Akses modul pembelajaran, bahan tayang, dan artikel dari kegiatan widyaiswara.</p>
+                </div>
+
+                <!-- Search Materi -->
+                <div class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200 mb-8">
+                    <div class="relative w-full">
+                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
+                        <input type="text" id="search-materi" oninput="filterMateri()" placeholder="Cari judul materi..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50">
+                    </div>
+                </div>
+
+                <!-- Materi Grid -->
+                <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB PROFIL -->
+        <section id="tab-profil" class="tab-content hidden py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                    <div class="bg-teal-900 p-10 text-white text-center relative">
+                        <div class="w-32 h-32 rounded-3xl overflow-hidden bg-teal-800 text-white mx-auto flex items-center justify-center border-4 border-white/20 shadow-2xl mb-4">
+                            <img id="profile-full-img" src="" alt="Foto Profil" class="w-full h-full object-cover">
+                        </div>
+                        <h1 class="text-2xl font-bold" id="profile-full-name">Dr. H. Ahmad Fauzi, M.Pd.</h1>
+                        <p class="text-teal-200 text-sm mt-1" id="profile-full-title">Widyaiswara Ahli Utama</p>
+                    </div>
+                    <div class="p-8 space-y-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 border-b pb-2 mb-3">Biografi Singkat</h3>
+                            <p class="text-slate-600 leading-relaxed text-sm" id="profile-bio">
+                                Widyaiswara Ahli Utama dengan pengalaman lebih dari 15 tahun dalam bidang pengembangan SDM, perancangan kurikulum pelatihan kepemimpinan, serta digitalisasi pembelajaran ASN. Aktif sebagai narasumber nasional, penguji, dan inovator modul diklat.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="text-xs text-slate-400 uppercase font-semibold block">NIP / ID Widyaiswara</span>
+                                <span class="font-bold text-slate-800 text-sm" id="profile-nip">19780512 200312 1 005</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="text-xs text-slate-400 uppercase font-semibold block">Instansi / Unit Kerja</span>
+                                <span class="font-bold text-slate-800 text-sm" id="profile-instansi">Pusat Pengembangan Kompetensi ASN</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="text-xs text-slate-400 uppercase font-semibold block">Bidang Keahlian</span>
+                                <span class="font-bold text-slate-800 text-sm" id="profile-keahlian">Manajemen Kepemimpinan & E-Learning</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="text-xs text-slate-400 uppercase font-semibold block">Email Kontak</span>
+                                <span class="font-bold text-slate-800 text-sm" id="profile-email">ahmad.fauzi@widyaiswara.go.id</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD -->
+        <section id="tab-admin" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Admin Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between bg-white p-6 rounded-2xl shadow-xs border border-slate-200 mb-8 gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-teal-900 text-white rounded-2xl flex items-center justify-center text-xl font-bold shadow-md">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-slate-900">Admin Dashboard Hostinger / MySQL</h1>
+                            <p class="text-xs text-slate-500">Kelola database kegiatan, materi, profil, foto, galeri, serta unduh paket file website.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="downloadZipPackage()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-file-zipper"></i>
+                            <span>Download Zip (Hostinger Ready)</span>
+                        </button>
+                        <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>DB Aktif</span>
+                        </span>
+                        <button onclick="logoutAdmin()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-all">
+                            Keluar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs Nav -->
+                <div class="flex border-b border-slate-200 mb-6 space-x-4 overflow-x-auto">
+                    <button onclick="switchAdminTab('kegiatan')" id="adm-nav-kegiatan" class="pb-3 border-b-2 border-teal-900 text-teal-900 font-bold text-sm transition-all whitespace-nowrap">Kelola Kegiatan</button>
+                    <button onclick="switchAdminTab('galeri')" id="adm-nav-galeri" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm transition-all whitespace-nowrap">Kelola Galeri Foto</button>
+                    <button onclick="switchAdminTab('materi')" id="adm-nav-materi" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm transition-all whitespace-nowrap">Kelola Materi</button>
+                    <button onclick="switchAdminTab('profil')" id="adm-nav-profil" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm transition-all whitespace-nowrap">Pengaturan Profil & Foto</button>
+                </div>
+
+                <!-- Admin Tab: Kegiatan -->
+                <div id="adm-content-kegiatan" class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-slate-900">Data Kegiatan Widyaiswara</h2>
+                        <button onclick="openActivityModal()" class="px-4 py-2.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white font-semibold text-xs transition-all flex items-center space-x-2 shadow-sm">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Kegiatan</span>
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-200 uppercase">
+                                        <th class="p-4">Kegiatan</th>
+                                        <th class="p-4">Kategori</th>
+                                        <th class="p-4">Tanggal</th>
+                                        <th class="p-4 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-kegiatan-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab: Galeri Foto -->
+                <div id="adm-content-galeri" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-slate-900">Data Galeri Foto Kegiatan</h2>
+                        <button onclick="openGaleriModal()" class="px-4 py-2.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white font-semibold text-xs transition-all flex items-center space-x-2 shadow-sm">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Foto Galeri</span>
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-200 uppercase">
+                                        <th class="p-4">Foto / Keterangan</th>
+                                        <th class="p-4">Kategori</th>
+                                        <th class="p-4">Tanggal</th>
+                                        <th class="p-4 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-galeri-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab: Materi -->
+                <div id="adm-content-materi" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-slate-900">Data Materi Publikasi</h2>
+                        <button onclick="openMateriModal()" class="px-4 py-2.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white font-semibold text-xs transition-all flex items-center space-x-2 shadow-sm">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Materi</span>
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-200 uppercase">
+                                        <th class="p-4">Judul Materi</th>
+                                        <th class="p-4">Kategori / File</th>
+                                        <th class="p-4">Tanggal</th>
+                                        <th class="p-4 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-materi-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab: Profil -->
+                <div id="adm-content-profil" class="space-y-6 hidden">
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                        <h2 class="text-lg font-bold text-slate-900 mb-4">Edit Profil & Upload Foto Widyaiswara</h2>
+                        <form onsubmit="saveProfile(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">URL Foto Profil / Google Drive Link</label>
+                                <div class="flex gap-4 items-center">
+                                    <input type="text" id="edit-foto" placeholder="https://drive.google.com/file/d/... atau https://images.unsplash.com/..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border">
+                                        <img id="preview-admin-foto" src="" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <span class="text-[11px] text-teal-800 mt-1 block">💡 <b>Tip Google Drive:</b> Pastikan link akses diatur ke "Siapa saja yang memiliki tautan" (Anyone with the link can view).</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Lengkap & Gelar</label>
+                                    <input type="text" id="edit-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Jabatan Fungsional</label>
+                                    <input type="text" id="edit-title" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">NIP</label>
+                                    <input type="text" id="edit-nip" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Instansi / Unit Kerja</label>
+                                    <input type="text" id="edit-instansi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Bidang Keahlian</label>
+                                    <input type="text" id="edit-keahlian" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email</label>
+                                    <input type="email" id="edit-email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Biografi Singkat</label>
+                                <textarea id="edit-bio" rows="4" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required></textarea>
+                            </div>
+                            <button type="submit" class="px-6 py-2.5 bg-teal-900 text-white rounded-xl font-semibold text-xs hover:bg-teal-950 transition-all shadow-sm">
+                                Simpan Perubahan Profil & Foto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            <div>
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-8 h-8 rounded-xl bg-teal-800 flex items-center justify-center text-white font-bold text-sm">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <span class="font-bold text-white text-lg">Ruang Kinerja Widyaiswara</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Platform dokumentasi profesional untuk mencatat kinerja, karya, dan publikasi widyaiswara dalam mendukung pengembangan kompetensi ASN.
+                </p>
+            </div>
+            <div class="text-center md:text-left">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-white mb-3">Tautan Cepat</h4>
+                <div class="space-x-4 text-sm">
+                    <button onclick="switchTab('beranda')" class="hover:text-white transition-all">Beranda</button>
+                    <button onclick="switchTab('kegiatan')" class="hover:text-white transition-all">Kegiatan</button>
+                    <button onclick="switchTab('galeri')" class="hover:text-white transition-all">Galeri Foto</button>
+                    <button onclick="switchTab('materi')" class="hover:text-white transition-all">Materi</button>
+                    <button onclick="switchTab('profil')" class="hover:text-white transition-all">Profil</button>
+                </div>
+            </div>
+            <div class="text-center md:text-right">
+                <p class="text-xs text-slate-500">&copy; 2026 Ruang Kinerja Widyaiswara. Hostinger Database MySQL Ready.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CHATBOT AI WIDGET -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <!-- Chat Toggle Button -->
+        <button onclick="toggleChatbot()" id="chat-toggle-btn" class="w-14 h-14 rounded-full bg-teal-900 hover:bg-teal-950 text-white shadow-2xl flex items-center justify-center text-2xl transition-all transform hover:scale-105">
+            <i class="fa-solid fa-robot"></i>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="chat-window" class="hidden absolute bottom-20 right-0 w-80 sm:w-96 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden h-[500px]">
+            <!-- Header -->
+            <div class="bg-teal-900 p-4 text-white flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-2xl bg-teal-800 flex items-center justify-center text-white text-sm shadow">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm leading-tight">Asisten Widyaiswara</h3>
+                        <span class="text-[10px] text-teal-300 font-medium flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span> Online & Siap Membantu
+                        </span>
+                    </div>
+                </div>
+                <button onclick="toggleChatbot()" class="text-slate-300 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Messages Box -->
+            <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-3 bg-slate-50/50 text-xs">
+                <div class="flex items-start space-x-2">
+                    <div class="w-7 h-7 rounded-full bg-teal-900 text-white flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-robot text-[10px]"></i>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-xs border border-slate-100 text-slate-700 max-w-[80%]">
+                        Halo! Saya **Asisten Widyaiswara**. Tanyakan apa saja seputar kegiatan workshop, seminar, pelatihan, tanggal, galeri foto, atau materi di database kami!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggested Quick Prompts -->
+            <div class="p-2 bg-white border-t border-slate-100 flex gap-1.5 overflow-x-auto text-[10px]">
+                <button onclick="sendQuickPrompt('Apa saja workshop terbaru?')" class="bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full text-slate-600 shrink-0">Workshop Terbaru</button>
+                <button onclick="sendQuickPrompt('Lihat galeri foto kegiatan')" class="bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full text-slate-600 shrink-0">Galeri Foto</button>
+                <button onclick="sendQuickPrompt('Materi pelatihan kepemimpinan')" class="bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full text-slate-600 shrink-0">Materi Kepemimpinan</button>
+            </div>
+
+            <!-- Input Box -->
+            <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+                <input type="text" id="chat-input" onkeypress="handleChatKey(event)" placeholder="Ketik pertanyaan kegiatan..." class="flex-grow px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50">
+                <button onclick="sendChatMessage()" class="w-9 h-9 rounded-xl bg-teal-900 hover:bg-teal-950 text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADMIN LOGIN -->
+    <div id="modal-admin-login" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-6 relative">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-teal-900 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-lock text-sm"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900">Login Admin</h3>
+                </div>
+                <button onclick="closeAdminLogin()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Username Admin</label>
+                    <input type="text" id="login-username" value="admin" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Password</label>
+                    <input type="password" id="login-password" value="admin123" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div id="login-error" class="text-xs text-rose-500 hidden">Username atau password salah!</div>
+                <button type="submit" class="w-full py-3 bg-teal-900 hover:bg-teal-950 text-white font-bold rounded-xl transition-all shadow-sm text-sm">
+                    Masuk ke Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DETAIL KEGIATAN FULLSCREEN -->
+    <div id="modal-detail-kegiatan" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center hidden p-2 sm:p-6">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl h-full sm:h-[92vh] overflow-y-auto flex flex-col relative animate-fade-in">
+            <!-- Header Bar Fullscreen -->
+            <div class="sticky top-0 bg-white/95 backdrop-blur-md px-6 py-4 border-b border-slate-200 flex justify-between items-center z-10">
+                <div class="flex items-center space-x-3">
+                    <span id="detail-kategori-badge" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 uppercase tracking-wider">Workshop</span>
+                    <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1.5"></i> <span id="detail-tanggal"></span></span>
+                </div>
+                <button onclick="closeDetailModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Content Body Fullscreen -->
+            <div class="p-6 sm:p-10 space-y-8 flex-grow">
+                <h1 id="detail-judul" class="text-2xl sm:text-4xl font-extrabold text-slate-900 leading-tight"></h1>
+                
+                <!-- Gambar Dokumentasi Besar -->
+                <div class="w-full h-72 sm:h-[420px] rounded-3xl bg-slate-100 overflow-hidden shadow-lg border border-slate-200">
+                    <img id="detail-image" src="" alt="Dokumentasi" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Deskripsi Lengkap -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-teal-800">Deskripsi Kegiatan</h3>
+                    <p id="detail-deskripsi" class="text-slate-600 text-base sm:text-lg leading-relaxed"></p>
+                </div>
+
+                <!-- Tautan / Materi Terkait -->
+                <div class="bg-teal-50/60 p-6 rounded-2xl border border-teal-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-teal-900 uppercase tracking-wider block">Akses File & Tautan</span>
+                        <p class="text-xs text-slate-600">Klik tautan di samping untuk membuka modul, bahan tayang, atau video dokumentasi terkait kegiatan ini.</p>
+                    </div>
+                    <a id="detail-link" href="#" target="_blank" class="px-6 py-3 rounded-xl bg-teal-900 hover:bg-teal-950 text-white font-bold text-xs transition-all shadow-md inline-flex items-center space-x-2 shrink-0">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        <span id="detail-link-text">Buka Link Kegiatan</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PRATINJAU FOTO GALERI -->
+    <div id="modal-galeri-preview" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center hidden p-4">
+        <div class="relative max-w-4xl w-full flex flex-col items-center">
+            <button onclick="closeGaleriPreview()" class="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-full max-h-[75vh] rounded-2xl overflow-hidden bg-slate-900 shadow-2xl flex items-center justify-center">
+                <img id="preview-galeri-img" src="" class="max-w-full max-h-[75vh] object-contain">
+            </div>
+            <div class="mt-4 text-center text-white">
+                <h3 id="preview-galeri-title" class="font-bold text-lg"></h3>
+                <span id="preview-galeri-kategori" class="text-xs text-teal-300 font-semibold uppercase tracking-wider block mt-1"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: FORM TAMBAH/EDIT KEGIATAN (ADMIN) -->
+    <div id="modal-activity-form" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 relative">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 id="activity-form-title" class="font-bold text-lg text-slate-900">Tambah Kegiatan Baru</h3>
+                <button onclick="closeActivityModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="saveActivity(event)" class="space-y-4">
+                <input type="hidden" id="act-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Judul Kegiatan</label>
+                    <input type="text" id="act-judul" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Kategori</label>
+                        <select id="act-kategori" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50">
+                            <option value="Workshop">Workshop</option>
+                            <option value="Seminar">Seminar</option>
+                            <option value="Pelatihan">Pelatihan</option>
+                            <option value="Webinar">Webinar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tanggal</label>
+                        <input type="date" id="act-tanggal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Link Kegiatan / Materi</label>
+                    <input type="url" id="act-link" placeholder="https://..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">URL Gambar / Google Drive Link</label>
+                    <input type="text" id="act-gambar" placeholder="https://drive.google.com/file/d/... atau https://..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                    <span class="text-[11px] text-slate-400 mt-1 block">Bisa menggunakan link langsung atau link berbagi Google Drive.</span>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Deskripsi Lengkap</label>
+                    <textarea id="act-deskripsi" rows="4" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeActivityModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white text-xs font-semibold transition-all shadow-sm">Simpan Kegiatan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: FORM TAMBAH/EDIT FOTO GALERI (ADMIN) -->
+    <div id="modal-galeri-form" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 relative">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 id="galeri-form-title" class="font-bold text-lg text-slate-900">Tambah Foto Galeri Baru</h3>
+                <button onclick="closeGaleriModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="saveGaleri(event)" class="space-y-4">
+                <input type="hidden" id="gal-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Judul / Keterangan Foto</label>
+                    <input type="text" id="gal-judul" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Kategori Galeri</label>
+                        <select id="gal-kategori" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50">
+                            <option value="Fasilitasi">Fasilitasi Kelas</option>
+                            <option value="Narasumber">Narasumber</option>
+                            <option value="Pelatihan">Pelatihan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tanggal</label>
+                        <input type="date" id="gal-tanggal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">URL Gambar / Google Drive Link</label>
+                    <input type="text" id="gal-gambar" placeholder="https://drive.google.com/file/d/... atau https://..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                    <span class="text-[11px] text-slate-400 mt-1 block">Bisa menggunakan link langsung atau link berbagi Google Drive.</span>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeGaleriModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white text-xs font-semibold transition-all shadow-sm">Simpan Foto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: FORM TAMBAH/EDIT MATERI (ADMIN) -->
+    <div id="modal-materi-form" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 relative">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 id="materi-form-title" class="font-bold text-lg text-slate-900">Tambah Materi Baru</h3>
+                <button onclick="closeMateriModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="saveMateri(event)" class="space-y-4">
+                <input type="hidden" id="mat-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Judul Materi</label>
+                    <input type="text" id="mat-judul" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Kategori / Format</label>
+                        <select id="mat-kategori" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50">
+                            <option value="Modul PDF">Modul PDF</option>
+                            <option value="Bahan Tayang PPT">Bahan Tayang PPT</option>
+                            <option value="Artikel Ilmiah">Artikel Ilmiah</option>
+                            <option value="Video Pembelajaran">Video Pembelajaran</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tanggal Publikasi</label>
+                        <input type="date" id="mat-tanggal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Link File / Unduhan</label>
+                    <input type="url" id="mat-link" placeholder="https://..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">URL Gambar / Thumbnail</label>
+                    <input type="text" id="mat-gambar" placeholder="https://drive.google.com/file/d/... atau https://..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Deskripsi Singkat</label>
+                    <textarea id="mat-deskripsi" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-800 bg-slate-50" required></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeMateriModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-teal-900 hover:bg-teal-950 text-white text-xs font-semibold transition-all shadow-sm">Simpan Materi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Aplikasi -->
+    <script>
+        // Database Simulasi (Hostinger/MySQL Dynamic State)
+        let profileData = {
+            name: "Dr. H. Ahmad Fauzi, M.Pd.",
+            title: "Widyaiswara Ahli Utama",
+            nip: "19780512 200312 1 005",
+            instansi: "Pusat Pengembangan Kompetensi ASN",
+            keahlian: "Manajemen Kepemimpinan & E-Learning",
+            email: "ahmad.fauzi@widyaiswara.go.id",
+            foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800",
+            bio: "Widyaiswara Ahli Utama dengan pengalaman lebih dari 15 tahun dalam bidang pengembangan SDM, perancangan kurikulum pelatihan kepemimpinan, serta digitalisasi pembelajaran ASN. Aktif sebagai narasumber nasional, penguji, dan inovator modul diklat."
+        };
+
+        let kegiatanList = [
+            {
+                id: 1,
+                judul: "Workshop Implementasi Kurikulum Berbasis Digital untuk ASN",
+                kategori: "Workshop",
+                tanggal: "2026-03-10",
+                deskripsi: "Workshop intensif bagi widyaiswara dan pengampu diklat dalam mengintegrasikan platform LMS interaktif serta pembuatan konten micro-learning.",
+                link: "https://example.com/workshop-digital",
+                gambar: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                id: 2,
+                judul: "Seminar Nasional Transformasi Birokrasi & Kepemimpinan Melayani",
+                kategori: "Seminar",
+                tanggal: "2026-02-22",
+                deskripsi: "Menghadirkan pembicara kunci membahas reformasi birokrasi, core values ASN BerAKHLAK, dan strategi kepemimpinan adaptif di era AI.",
+                link: "https://example.com/seminar-birokrasi",
+                gambar: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                id: 3,
+                judul: "Pelatihan Kepemimpinan Administrator (PKA) Angkatan XII",
+                kategori: "Pelatihan",
+                tanggal: "2026-02-01",
+                deskripsi: "Fasilitasi diklat kepemimpinan bagi pejabat administrator instansi pusat dan daerah dengan metode coaching, mentoring, dan studi kasus.",
+                link: "https://example.com/pka-XII",
+                gambar: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                id: 4,
+                judul: "Webinar Inovasi Pembelajaran Orang Dewasa (Andragogi)",
+                kategori: "Webinar",
+                tanggal: "2026-01-15",
+                deskripsi: "Webinar interaktif membahas teknik fasilitasi kelas daring yang menarik, partisipatif, dan berdampak tinggi bagi peserta diklat.",
+                link: "https://example.com/webinar-andragogi",
+                gambar: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=800"
+            }
+        ];
+
+        let galeriList = [
+            {
+                id: 1,
+                judul: "Fasilitasi Kelas Pelatihan Kepemimpinan Pengawas",
+                kategori: "Fasilitasi",
+                tanggal: "2026-03-01",
+                gambar: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                id: 2,
+                judul: "Narasumber Utama Seminar Nasional Birokrasi Bersih",
+                kategori: "Narasumber",
+                tanggal: "2026-02-18",
+                gambar: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                id: 3,
+                judul: "Sesi Coaching & Mentoring Peserta Diklat",
+                kategori: "Pelatihan",
+                tanggal: "2026-02-10",
+                gambar: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                id: 4,
+                judul: "Workshop Penyusunan E-Modul Pembelajaran ASN",
+                kategori: "Fasilitasi",
+                tanggal: "2026-01-25",
+                gambar: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=800"
+            }
+        ];
+
+        let materiList = [
+            {
+                id: 1,
+                judul: "Modul Praktis Pembelajaran Andragogi Modern",
+                kategori: "Modul PDF",
+                tanggal: "2026-03-01",
+                deskripsi: "Panduan lengkap teknik penyusunan bahan ajar dan metode penyampaian diklat yang berpusat pada peserta.",
+                link: "https://example.com/modul-andragogi.pdf",
+                gambar: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 2,
+                judul: "Slide Presentasi Kepemimpinan Adaptif & Problem Solving",
+                kategori: "Bahan Tayang PPT",
+                tanggal: "2026-02-18",
+                deskripsi: "Bahan tayang interaktif untuk sesi pelatihan kepemimpinan tingkat pengawas dan administrator.",
+                link: "https://example.com/ppt-kepemimpinan.pptx",
+                gambar: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 3,
+                judul: "Artikel: Strategi Digitalisasi Widyaiswara di Era 5.0",
+                kategori: "Artikel Ilmiah",
+                tanggal: "2026-01-10",
+                deskripsi: "Publikasi ilmiah mengenai tantangan dan peluang widyaiswara dalam mengadopsi teknologi kecerdasan buatan.",
+                link: "https://example.com/artikel-widyaiswara.pdf",
+                gambar: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600"
+            }
+        ];
+
+        let currentCategoryFilter = 'Semua';
+        let currentGaleriFilter = 'Semua';
+        let isAdminLoggedIn = false;
+
+        // Fungsi Helper untuk Mengonversi Link Google Drive agar Bisa Ditampilkan di tag <img>
+        function parseImageUrl(url) {
+            if (!url) return '';
+            url = url.trim();
+            // Cek jika link Google Drive
+            if (url.includes('drive.google.com')) {
+                let fileId = '';
+                if (url.includes('/file/d/')) {
+                    const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) fileId = match[1];
+                } else if (url.includes('id=')) {
+                    const urlParams = new URLSearchParams(url.split('?')[1]);
+                    fileId = urlParams.get('id');
+                }
+                if (fileId) {
+                    return `https://lh3.googleusercontent.com/d/${fileId}`;
+                }
+            }
+            return url;
+        }
+
+        // Inisialisasi Halaman
+        window.onload = function() {
+            renderAll();
+        };
+
+        function renderAll() {
+            updateProfileUI();
+            renderStats();
+            renderBerandaLatest();
+            renderKegiatanGrid(kegiatanList);
+            renderGaleriGrid(galeriList);
+            renderMateriGrid(materiList);
+            if(isAdminLoggedIn) {
+                renderAdminTables();
+            }
+        }
+
+        // Fungsi Menampilkan Notifikasi Toast Sukses
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            if(message && msgEl) msgEl.innerText = message;
+            
+            if(toast) {
+                toast.classList.remove('translate-x-96', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+
+                setTimeout(() => {
+                    toast.classList.remove('translate-x-0', 'opacity-100');
+                    toast.classList.add('translate-x-96', 'opacity-0');
+                }, 3500);
+            }
+        }
+
+        // Navigasi Tabs
+        function switchTab(tabId) {
+            const tabs = ['beranda', 'kegiatan', 'galeri', 'materi', 'profil', 'admin'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if(el) el.classList.add('hidden');
+                const navEl = document.getElementById(`nav-${t}`);
+                if(navEl) {
+                    navEl.classList.remove('text-teal-900', 'bg-teal-50');
+                    navEl.classList.add('text-slate-600', 'hover:text-teal-900', 'hover:bg-slate-50');
+                }
+            });
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if(activeTab) activeTab.classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.classList.remove('text-slate-600', 'hover:text-teal-900', 'hover:bg-slate-50');
+                activeNav.classList.add('text-teal-900', 'bg-teal-50');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if(menu) menu.classList.toggle('hidden');
+        }
+
+        // Update Profil UI
+        function updateProfileUI() {
+            const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
+            setVal('profile-full-name', profileData.name);
+            setVal('profile-full-title', profileData.title);
+            setVal('profile-nip', profileData.nip);
+            setVal('profile-instansi', profileData.instansi);
+            setVal('profile-keahlian', profileData.keahlian);
+            setVal('profile-email', profileData.email);
+            setVal('profile-bio', profileData.bio);
+            
+            // Render Foto Profil (Menggunakan parseImageUrl agar mendukung Google Drive)
+            const resolvedFoto = parseImageUrl(profileData.foto);
+            const heroImg = document.getElementById('hero-profile-img');
+            if(heroImg) heroImg.src = resolvedFoto;
+            const fullImg = document.getElementById('profile-full-img');
+            if(fullImg) fullImg.src = resolvedFoto;
+            const adminFoto = document.getElementById('preview-admin-foto');
+            if(adminFoto) adminFoto.src = resolvedFoto;
+
+            // Admin Form Pre-fill
+            const setInput = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+            setInput('edit-name', profileData.name);
+            setInput('edit-title', profileData.title);
+            setInput('edit-nip', profileData.nip);
+            setInput('edit-instansi', profileData.instansi);
+            setInput('edit-keahlian', profileData.keahlian);
+            setInput('edit-email', profileData.email);
+            setInput('edit-bio', profileData.bio);
+            setInput('edit-foto', profileData.foto);
+        }
+
+        // Render Statistik
+        function renderStats() {
+            const workshopCount = kegiatanList.filter(k => k.kategori === 'Workshop').length + 15;
+            const seminarCount = kegiatanList.filter(k => k.kategori === 'Seminar').length + 21;
+            const pelatihanCount = kegiatanList.filter(k => k.kategori === 'Pelatihan').length + 32;
+            const galeriCount = galeriList.length + 8;
+            const materiCount = materiList.length + 39;
+
+            const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
+            setVal('count-workshop', workshopCount);
+            setVal('count-seminar', seminarCount);
+            setVal('count-pelatihan', pelatihanCount);
+            setVal('count-galeri', galeriCount);
+            setVal('count-materi', materiCount);
+        }
+
+        // Beranda Latest Activities
+        function renderBerandaLatest() {
+            const container = document.getElementById('latest-activities-grid');
+            if(!container) return;
+            const latest = kegiatanList.slice(0, 3);
+            container.innerHTML = latest.map(k => `
+                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl transition-all">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${parseImageUrl(k.gambar)}" alt="Kegiatan" class="w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-teal-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow">${k.kategori}</span>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1"><i class="fa-regular fa-calendar mr-1"></i> ${k.tanggal}</span>
+                            <h3 class="font-bold text-slate-900 text-base line-clamp-2">${k.judul}</h3>
+                            <p class="text-xs text-slate-500 mt-2 line-clamp-3">${k.deskripsi}</p>
+                        </div>
+                        <button onclick="openDetailModal(${k.id})" class="w-full py-2.5 rounded-xl bg-slate-50 hover:bg-teal-50 text-teal-900 font-semibold text-xs transition-all border border-slate-100 flex items-center justify-center space-x-2">
+                            <span>Lihat Detail</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Kegiatan Grid
+        function renderKegiatanGrid(data) {
+            const container = document.getElementById('kegiatan-grid');
+            if(!container) return;
+            if(data.length === 0) {
+                container.innerHTML = `<div class="col-span-3 text-center py-12 text-slate-400">Tidak ada kegiatan ditemukan.</div>`;
+                return;
+            }
+            container.innerHTML = data.map(k => `
+                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl transition-all">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${parseImageUrl(k.gambar)}" alt="Kegiatan" class="w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-teal-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow">${k.kategori}</span>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1"><i class="fa-regular fa-calendar mr-1"></i> ${k.tanggal}</span>
+                            <h3 class="font-bold text-slate-900 text-base line-clamp-2">${k.judul}</h3>
+                            <p class="text-xs text-slate-500 mt-2 line-clamp-3">${k.deskripsi}</p>
+                        </div>
+                        <button onclick="openDetailModal(${k.id})" class="w-full py-2.5 rounded-xl bg-slate-50 hover:bg-teal-50 text-teal-900 font-semibold text-xs transition-all border border-slate-100 flex items-center justify-center space-x-2">
+                            <span>Lihat Detail</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Galeri Grid
+        function renderGaleriGrid(data) {
+            const container = document.getElementById('galeri-grid');
+            if(!container) return;
+            if(data.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Tidak ada foto di galeri.</div>`;
+                return;
+            }
+            container.innerHTML = data.map(g => `
+                <div onclick="openGaleriPreview('${g.gambar}', '${g.judul}', '${g.kategori}')" class="group bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden cursor-pointer hover:shadow-xl transition-all flex flex-col">
+                    <div class="h-52 overflow-hidden relative">
+                        <img src="${parseImageUrl(g.gambar)}" alt="${g.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-slate-950/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <i class="fa-solid fa-expand text-2xl"></i>
+                        </div>
+                        <span class="absolute top-3 left-3 bg-teal-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase shadow">${g.kategori}</span>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow justify-between space-y-2">
+                        <h3 class="font-bold text-slate-900 text-sm line-clamp-2">${g.judul}</h3>
+                        <span class="text-[11px] text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> ${g.tanggal}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setCategoryFilter(cat) {
+            currentCategoryFilter = cat;
+            ['Semua', 'Workshop', 'Seminar', 'Pelatihan', 'Webinar'].forEach(c => {
+                const btn = document.getElementById(`filter-btn-${c}`);
+                if(btn) {
+                    if(c === cat) {
+                        btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-teal-900 text-white transition-all shadow-sm";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all";
+                    }
+                }
+            });
+            filterKegiatan();
+        }
+
+        function filterKegiatan() {
+            const searchInput = document.getElementById('search-kegiatan');
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
+            const filtered = kegiatanList.filter(k => {
+                const matchCat = currentCategoryFilter === 'Semua' || k.kategori === currentCategoryFilter;
+                const matchQuery = k.judul.toLowerCase().includes(query) || k.deskripsi.toLowerCase().includes(query);
+                return matchCat && matchQuery;
+            });
+            renderKegiatanGrid(filtered);
+        }
+
+        function setGaleriFilter(cat) {
+            currentGaleriFilter = cat;
+            ['Semua', 'Fasilitasi', 'Narasumber', 'Pelatihan'].forEach(c => {
+                const btn = document.getElementById(`galeri-btn-${c}`);
+                if(btn) {
+                    if(c === cat) {
+                        btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-teal-900 text-white transition-all shadow-sm";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all";
+                    }
+                }
+            });
+            const filtered = currentGaleriFilter === 'Semua' ? galeriList : galeriList.filter(g => g.kategori === currentGaleriFilter);
+            renderGaleriGrid(filtered);
+        }
+
+        function openGaleriPreview(imgSrc, title, cat) {
+            const img = document.getElementById('preview-galeri-img');
+            if(img) img.src = parseImageUrl(imgSrc);
+            const t = document.getElementById('preview-galeri-title');
+            if(t) t.innerText = title;
+            const k = document.getElementById('preview-galeri-kategori');
+            if(k) k.innerText = cat;
+            const modal = document.getElementById('modal-galeri-preview');
+            if(modal) modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGaleriPreview() {
+            const modal = document.getElementById('modal-galeri-preview');
+            if(modal) modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Render Materi Grid
+        function renderMateriGrid(data) {
+            const container = document.getElementById('materi-grid');
+            if(!container) return;
+            if(data.length === 0) {
+                container.innerHTML = `<div class="col-span-2 text-center py-12 text-slate-400">Tidak ada materi ditemukan.</div>`;
+                return;
+            }
+            container.innerHTML = data.map(m => `
+                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6 flex flex-col md:flex-row gap-6 items-center">
+                    <div class="w-full md:w-40 h-32 rounded-2xl overflow-hidden shrink-0">
+                        <img src="${parseImageUrl(m.gambar)}" alt="Materi" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow space-y-2 w-full">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-800 uppercase">${m.kategori}</span>
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> ${m.tanggal}</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">${m.judul}</h3>
+                        <p class="text-xs text-slate-500 line-clamp-2">${m.deskripsi}</p>
+                        <div class="pt-2">
+                            <a href="${m.link}" target="_blank" class="inline-flex items-center space-x-2 text-xs font-semibold text-teal-800 hover:text-teal-950 bg-teal-50 px-3 py-2 rounded-xl transition-all">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Unduh / Akses File Materi</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterMateri() {
+            const searchInput = document.getElementById('search-materi');
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
+            const filtered = materiList.filter(m => m.judul.toLowerCase().includes(query) || m.deskripsi.toLowerCase().includes(query));
+            renderMateriGrid(filtered);
+        }
+
+        // Detail Modal Kegiatan (Fullscreen)
+        function openDetailModal(id) {
+            const k = kegiatanList.find(item => item.id === id);
+            if(!k) return;
+            const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
+            setVal('detail-kategori-badge', k.kategori);
+            const img = document.getElementById('detail-image');
+            if(img) img.src = parseImageUrl(k.gambar);
+            setVal('detail-judul', k.judul);
+            setVal('detail-tanggal', k.tanggal);
+            setVal('detail-deskripsi', k.deskripsi);
+            const link = document.getElementById('detail-link');
+            if(link) link.href = k.link;
+            const modal = document.getElementById('modal-detail-kegiatan');
+            if(modal) modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('modal-detail-kegiatan');
+            if(modal) modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Admin Auth & Modal
+        function openAdminLogin() {
+            if(isAdminLoggedIn) {
+                switchTab('admin');
+            } else {
+                const modal = document.getElementById('modal-admin-login');
+                if(modal) modal.classList.remove('hidden');
+            }
+        }
+
+        function closeAdminLogin() {
+            const modal = document.getElementById('modal-admin-login');
+            if(modal) modal.classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const uEl = document.getElementById('login-username');
+            const pEl = document.getElementById('login-password');
+            const user = uEl ? uEl.value : '';
+            const pass = pEl ? pEl.value : '';
+            if(user === 'admin' && pass === 'admin123') {
+                isAdminLoggedIn = true;
+                closeAdminLogin();
+                switchTab('admin');
+                renderAdminTables();
+            } else {
+                const err = document.getElementById('login-error');
+                if(err) err.classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            switchTab('beranda');
+        }
+
+        // Download Paket Hostinger ZIP Simulation
+        function downloadZipPackage() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ruang-kinerja-widyaiswara-hostinger.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('Paket file berhasil diunduh untuk Hostinger!');
+        }
+
+        // Admin Tabs Switch
+        function switchAdminTab(subTab) {
+            ['kegiatan', 'galeri', 'materi', 'profil'].forEach(t => {
+                const el = document.getElementById(`adm-content-${t}`);
+                if(el) el.classList.add('hidden');
+                const btn = document.getElementById(`adm-nav-${t}`);
+                if(btn) {
+                    btn.className = "pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm transition-all whitespace-nowrap";
+                }
+            });
+            const activeContent = document.getElementById(`adm-content-${subTab}`);
+            if(activeContent) activeContent.classList.remove('hidden');
+            const activeBtn = document.getElementById(`adm-nav-${subTab}`);
+            if(activeBtn) activeBtn.className = "pb-3 border-b-2 border-teal-900 text-teal-900 font-bold text-sm transition-all whitespace-nowrap";
+        }
+
+        function renderAdminTables() {
+            // Tabel Kegiatan
+            const kTable = document.getElementById('admin-kegiatan-table-body');
+            if(kTable) {
+                kTable.innerHTML = kegiatanList.map(k => `
+                    <tr class="hover:bg-slate-50 transition-all">
+                        <td class="p-4 flex items-center space-x-3">
+                            <img src="${parseImageUrl(k.gambar)}" class="w-10 h-10 rounded-xl object-cover shrink-0">
+                            <span class="font-bold text-slate-800 line-clamp-1">${k.judul}</span>
+                        </td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-800 uppercase">${k.kategori}</span></td>
+                        <td class="p-4 text-slate-500 text-xs">${k.tanggal}</td>
+                        <td class="p-4 text-center space-x-2">
+                            <button onclick="editActivity(${k.id})" class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 text-xs font-semibold"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteActivity(${k.id})" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-semibold"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Tabel Galeri
+            const gTable = document.getElementById('admin-galeri-table-body');
+            if(gTable) {
+                gTable.innerHTML = galeriList.map(g => `
+                    <tr class="hover:bg-slate-50 transition-all">
+                        <td class="p-4 flex items-center space-x-3">
+                            <img src="${parseImageUrl(g.gambar)}" class="w-10 h-10 rounded-xl object-cover shrink-0">
+                            <span class="font-bold text-slate-800 line-clamp-1">${g.judul}</span>
+                        </td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-800 uppercase">${g.kategori}</span></td>
+                        <td class="p-4 text-slate-500 text-xs">${g.tanggal}</td>
+                        <td class="p-4 text-center space-x-2">
+                            <button onclick="editGaleri(${g.id})" class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 text-xs font-semibold"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteGaleri(${g.id})" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-semibold"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Tabel Materi
+            const mTable = document.getElementById('admin-materi-table-body');
+            if(mTable) {
+                mTable.innerHTML = materiList.map(m => `
+                    <tr class="hover:bg-slate-50 transition-all">
+                        <td class="p-4 flex items-center space-x-3">
+                            <img src="${parseImageUrl(m.gambar)}" class="w-10 h-10 rounded-xl object-cover shrink-0">
+                            <span class="font-bold text-slate-800 line-clamp-1">${m.judul}</span>
+                        </td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-800 uppercase">${m.kategori}</span></td>
+                        <td class="p-4 text-slate-500 text-xs">${m.tanggal}</td>
+                        <td class="p-4 text-center space-x-2">
+                            <button onclick="editMateri(${m.id})" class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 text-xs font-semibold"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteMateri(${m.id})" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-semibold"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // CRUD Kegiatan
+        function openActivityModal(id = null) {
+            const setInput = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+            setInput('act-id', '');
+            setInput('act-judul', '');
+            setInput('act-kategori', 'Workshop');
+            setInput('act-tanggal', new Date().toISOString().split('T')[0]);
+            setInput('act-link', '');
+            setInput('act-gambar', '');
+            setInput('act-deskripsi', '');
+            const titleEl = document.getElementById('activity-form-title');
+            if(titleEl) titleEl.innerText = 'Tambah Kegiatan Baru';
+
+            if(id) {
+                const k = kegiatanList.find(item => item.id === id);
+                if(k) {
+                    setInput('act-id', k.id);
+                    setInput('act-judul', k.judul);
+                    setInput('act-kategori', k.kategori);
+                    setInput('act-tanggal', k.tanggal);
+                    setInput('act-link', k.link);
+                    setInput('act-gambar', k.gambar);
+                    setInput('act-deskripsi', k.deskripsi);
+                    if(titleEl) titleEl.innerText = 'Edit Kegiatan Widyaiswara';
+                }
+            }
+            const modal = document.getElementById('modal-activity-form');
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        function closeActivityModal() {
+            const modal = document.getElementById('modal-activity-form');
+            if(modal) modal.classList.add('hidden');
+        }
+
+        function saveActivity(e) {
+            e.preventDefault();
+            const id = document.getElementById('act-id').value;
+            const newItem = {
+                id: id ? parseInt(id) : Date.now(),
+                judul: document.getElementById('act-judul').value,
+                kategori: document.getElementById('act-kategori').value,
+                tanggal: document.getElementById('act-tanggal').value,
+                link: document.getElementById('act-link').value,
+                gambar: document.getElementById('act-gambar').value,
+                deskripsi: document.getElementById('act-deskripsi').value
+            };
+
+            if(id) {
+                const index = kegiatanList.findIndex(item => item.id === parseInt(id));
+                if(index !== -1) kegiatanList[index] = newItem;
+            } else {
+                kegiatanList.unshift(newItem);
+            }
+            closeActivityModal();
+            renderAll();
+            showToast('Data kegiatan berhasil disimpan!');
+        }
+
+        function editActivity(id) {
+            openActivityModal(id);
+        }
+
+        function deleteActivity(id) {
+            if(confirm('Apakah Anda yakin ingin menghapus kegiatan ini dari database?')) {
+                kegiatanList = kegiatanList.filter(item => item.id !== id);
+                renderAll();
+                showToast('Kegiatan berhasil dihapus.');
+            }
+        }
+
+        // CRUD Galeri
+        function openGaleriModal(id = null) {
+            const setInput = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+            setInput('gal-id', '');
+            setInput('gal-judul', '');
+            setInput('gal-kategori', 'Fasilitasi');
+            setInput('gal-tanggal', new Date().toISOString().split('T')[0]);
+            setInput('gal-gambar', '');
+            const titleEl = document.getElementById('galeri-form-title');
+            if(titleEl) titleEl.innerText = 'Tambah Foto Galeri Baru';
+
+            if(id) {
+                const g = galeriList.find(item => item.id === id);
+                if(g) {
+                    setInput('gal-id', g.id);
+                    setInput('gal-judul', g.judul);
+                    setInput('gal-kategori', g.kategori);
+                    setInput('gal-tanggal', g.tanggal);
+                    setInput('gal-gambar', g.gambar);
+                    if(titleEl) titleEl.innerText = 'Edit Foto Galeri';
+                }
+            }
+            const modal = document.getElementById('modal-galeri-form');
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        function closeGaleriModal() {
+            const modal = document.getElementById('modal-galeri-form');
+            if(modal) modal.classList.add('hidden');
+        }
+
+        function saveGaleri(e) {
+            e.preventDefault();
+            const id = document.getElementById('gal-id').value;
+            const newItem = {
+                id: id ? parseInt(id) : Date.now(),
+                judul: document.getElementById('gal-judul').value,
+                kategori: document.getElementById('gal-kategori').value,
+                tanggal: document.getElementById('gal-tanggal').value,
+                gambar: document.getElementById('gal-gambar').value
+            };
+
+            if(id) {
+                const index = galeriList.findIndex(item => item.id === parseInt(id));
+                if(index !== -1) galeriList[index] = newItem;
+            } else {
+                galeriList.unshift(newItem);
+            }
+            closeGaleriModal();
+            renderAll();
+            showToast('Foto galeri berhasil disimpan!');
+        }
+
+        function editGaleri(id) {
+            openGaleriModal(id);
+        }
+
+        function deleteGaleri(id) {
+            if(confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?')) {
+                galeriList = galeriList.filter(item => item.id !== id);
+                renderAll();
+                showToast('Foto galeri berhasil dihapus.');
+            }
+        }
+
+        // CRUD Materi
+        function openMateriModal(id = null) {
+            const setInput = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+            setInput('mat-id', '');
+            setInput('mat-judul', '');
+            setInput('mat-kategori', 'Modul PDF');
+            setInput('mat-tanggal', new Date().toISOString().split('T')[0]);
+            setInput('mat-link', '');
+            setInput('mat-gambar', '');
+            setInput('mat-deskripsi', '');
+            const titleEl = document.getElementById('materi-form-title');
+            if(titleEl) titleEl.innerText = 'Tambah Materi Baru';
+
+            if(id) {
+                const m = materiList.find(item => item.id === id);
+                if(m) {
+                    setInput('mat-id', m.id);
+                    setInput('mat-judul', m.judul);
+                    setInput('mat-kategori', m.kategori);
+                    setInput('mat-tanggal', m.tanggal);
+                    setInput('mat-link', m.link);
+                    setInput('mat-gambar', m.gambar);
+                    setInput('mat-deskripsi', m.deskripsi);
+                    if(titleEl) titleEl.innerText = 'Edit Materi Publikasi';
+                }
+            }
+            const modal = document.getElementById('modal-materi-form');
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        function closeMateriModal() {
+            const modal = document.getElementById('modal-materi-form');
+            if(modal) modal.classList.add('hidden');
+        }
+
+        function saveMateri(e) {
+            e.preventDefault();
+            const id = document.getElementById('mat-id').value;
+            const newItem = {
+                id: id ? parseInt(id) : Date.now(),
+                judul: document.getElementById('mat-judul').value,
+                kategori: document.getElementById('mat-kategori').value,
+                tanggal: document.getElementById('mat-tanggal').value,
+                link: document.getElementById('mat-link').value,
+                gambar: document.getElementById('mat-gambar').value,
+                deskripsi: document.getElementById('mat-deskripsi').value
+            };
+
+            if(id) {
+                const index = materiList.findIndex(item => item.id === parseInt(id));
+                if(index !== -1) materiList[index] = newItem;
+            } else {
+                materiList.unshift(newItem);
+            }
+            closeMateriModal();
+            renderAll();
+            showToast('Data materi berhasil disimpan!');
+        }
+
+        function editMateri(id) {
+            openMateriModal(id);
+        }
+
+        function deleteMateri(id) {
+            if(confirm('Apakah Anda yakin ingin menghapus materi ini dari database?')) {
+                materiList = materiList.filter(item => item.id !== id);
+                renderAll();
+                showToast('Materi berhasil dihapus.');
+            }
+        }
+
+        // Save Profile & Foto
+        function saveProfile(e) {
+            e.preventDefault();
+            const getVal = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+            profileData.name = getVal('edit-name');
+            profileData.title = getVal('edit-title');
+            profileData.nip = getVal('edit-nip');
+            profileData.instansi = getVal('edit-instansi');
+            profileData.keahlian = getVal('edit-keahlian');
+            profileData.email = getVal('edit-email');
+            profileData.foto = getVal('edit-foto');
+            profileData.bio = getVal('edit-bio');
+
+            updateProfileUI();
+            showToast('Profil dan foto widyaiswara berhasil diperbarui!');
+        }
+
+        // CHATBOT AI ASISTEN WIDYAISWARA
+        function toggleChatbot() {
+            const win = document.getElementById('chat-window');
+            if(win) win.classList.toggle('hidden');
+        }
+
+        function sendQuickPrompt(txt) {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.value = txt;
+                sendChatMessage();
+            }
+        }
+
+        function handleChatKey(e) {
+            if(e.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            if(!input) return;
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            const chatMessages = document.getElementById('chat-messages');
+
+            // Render User Bubble
+            if(chatMessages) {
+                chatMessages.innerHTML += `
+                    <div class="flex items-start justify-end space-x-2">
+                        <div class="bg-teal-900 text-white p-3 rounded-2xl rounded-tr-none shadow-xs text-slate-100 max-w-[80%]">
+                            ${msg}
+                        </div>
+                    </div>
+                `;
+            }
+            input.value = '';
+            if(chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Generate AI Response based on Database
+            setTimeout(() => {
+                let reply = generateAIResponse(msg);
+                if(chatMessages) {
+                    chatMessages.innerHTML += `
+                        <div class="flex items-start space-x-2">
+                            <div class="w-7 h-7 rounded-full bg-teal-900 text-white flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-robot text-[10px]"></i>
+                            </div>
+                            <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-xs border border-slate-100 text-slate-700 max-w-[80%] leading-relaxed">
+                                ${reply}
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }, 600);
+        }
+
+        function generateAIResponse(query) {
+            const q = query.toLowerCase();
+
+            if(q.includes('galeri') || q.includes('foto') || q.includes('drive')) {
+                return `Anda dapat menambahkan foto menggunakan link Google Drive pada menu Admin. Pastikan status sharing link Google Drive diatur ke <b>"Siapa saja yang memiliki tautan"</b> (Anyone with the link can view) agar foto dapat tampil dengan sempurna!`;
+            }
+
+            if(q.includes('workshop') || q.includes('seminar') || q.includes('pelatihan') || q.includes('webinar')) {
+                const found = kegiatanList.filter(item => q.includes(item.kategori.toLowerCase()) || item.judul.toLowerCase().includes(q) || item.deskripsi.toLowerCase().includes(q));
+                if(found.length > 0) {
+                    let text = "Berikut kegiatan yang sesuai dengan pertanyaan Anda:<br><br>";
+                    found.forEach(item => {
+                        text += `• <b>${item.judul}</b> (${item.kategori} - ${item.tanggal})<br><a href="${item.link}" target="_blank" class="text-teal-800 underline">Akses Link</a><br><br>`;
+                    });
+                    return text;
+                }
+            }
+
+            if(q.includes('materi') || q.includes('modul') || q.includes('bahan')) {
+                let text = "Berikut beberapa materi publikasi yang tersedia:<br><br>";
+                materiList.forEach(m => {
+                    text += `• <b>${m.judul}</b> (${m.kategori})<br><a href="${m.link}" target="_blank" class="text-teal-800 underline">Unduh File</a><br><br>`;
+                });
+                return text;
+            }
+
+            if(q.includes('profil') || q.includes('siapa') || q.includes('ahmad fauzi')) {
+                return `Widyaiswara profil utama adalah <b>${profileData.name}</b> (${profileData.title}), NIP: ${profileData.nip}, bertugas di ${profileData.instansi}. Keahlian utama di bidang ${profileData.keahlian}.`;
+            }
+
+            // Default Search in Database
+            const matchedKegiatan = kegiatanList.filter(item => item.judul.toLowerCase().includes(q) || item.deskripsi.toLowerCase().includes(q));
+            if(matchedKegiatan.length > 0) {
+                let text = "Saya menemukan kegiatan berikut di database:<br><br>";
+                matchedKegiatan.forEach(item => {
+                    text += `• <b>${item.judul}</b> (${item.tanggal})<br>${item.deskripsi}<br><br>`;
+                });
+                return text;
+            }
+
+            return `Maaf, saya belum menemukan informasi spesifik tentang "${query}". Anda dapat mengeksplorasi menu Galeri Foto, Kegiatan, atau Materi yang tersedia di website ini.`;
+        }
+    </script>
+</body>
+</html>
